@@ -1,0 +1,223 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { Github, Linkedin, Mail, FileDown } from "lucide-react";
+
+// Matrix Rain Component
+function MatrixBackground() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = "01";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#00ff00";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 50);
+
+    // Resize handler
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed top-0 left-0 w-full h-full z-0"
+    />
+  );
+}
+
+export default function Portfolio() {
+  return (
+    <div className="relative min-h-screen font-mono">
+      {/* Hacker Background */}
+      <MatrixBackground />
+
+      {/* Portfolio Content */}
+      <div className="relative z-10 text-green-400">
+        {/* Header */}
+        <motion.header
+          className="p-6 text-center border-b border-green-500"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <h1 className="text-5xl font-bold text-green-400 drop-shadow-[0_0_10px_#00ff88]">
+            Vikas Kumar
+          </h1>
+          <motion.p
+            className="text-lg mt-2 text-gray-300"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+          >
+            Penetration Tester | VAPT Specialist
+          </motion.p>
+          <div className="flex justify-center space-x-6 mt-4">
+            <a
+              href="mailto:vikaskumar700950@gmail.com"
+              aria-label="Email Vikas"
+              className="hover:text-blue-400 transition"
+            >
+              <Mail />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/its-me-vikaskumar/"
+              target="_blank"
+              aria-label="LinkedIn"
+              className="hover:text-blue-400 transition"
+            >
+              <Linkedin />
+            </a>
+            <a
+              href="https://github.com/vikaskumar700950"
+              target="_blank"
+              aria-label="GitHub"
+              className="hover:text-blue-400 transition"
+            >
+              <Github />
+            </a>
+            <a
+              href="/VIKAS_KUMAR_VAPT_CV_UPDATED.pdf"
+              download
+              className="hover:text-red-400 flex items-center space-x-1"
+            >
+              <FileDown />
+              <span className="text-sm">Download CV</span>
+            </a>
+          </div>
+        </motion.header>
+
+        {/* About Section */}
+        <motion.section
+          className="p-10 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <h2 className="text-3xl font-semibold mb-4 text-cyan-400 drop-shadow-[0_0_8px_#00ffff]">
+            [ About Me ]
+          </h2>
+          <p className="max-w-2xl mx-auto text-gray-300 leading-relaxed">
+            Cybersecurity professional with 5+ years of experience in penetration testing, vulnerability assessment, and security audits.
+            Skilled in identifying, exploiting, and reporting critical vulnerabilities across web applications, networks, and systems.
+            Currently pursuing an MBA in IT & Operations at Manipal University to strengthen technical expertise with managerial and operational skills.
+          </p>
+        </motion.section>
+
+        {/* Skills Section */}
+        <section className="p-10">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-pink-500 drop-shadow-[0_0_8px_#ff0088]">
+            [ Core Competencies ]
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              "Web & Network Penetration Testing",
+              "Vulnerability Assessment & Exploitation",
+              "Red & Purple Team Exercises",
+              "Secure Configuration & Hardening",
+              "Incident Response & Risk Assessment",
+              "Tools: Burp Suite, Nessus, Metasploit, Nmap, Wireshark",
+            ].map((skill, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                className="hover:scale-105 transition-transform"
+              >
+                <Card className="bg-gray-900/70 border border-green-500 shadow-[0_0_15px_#00ff88] rounded-2xl">
+                  <CardContent className="p-4 text-center font-medium text-green-300">
+                    {skill}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact + Footer (unchanged style but neon look) */}
+        <section className="p-10">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-red-500 drop-shadow-[0_0_8px_#ff0044]">
+            [ Contact Me ]
+          </h2>
+          <motion.form
+            className="max-w-2xl mx-auto space-y-4 bg-gray-900/80 p-6 rounded-2xl border border-red-500 shadow-[0_0_15px_#ff0044]"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full p-3 border border-gray-600 bg-black text-green-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Your Email"
+              className="w-full p-3 border border-gray-600 bg-black text-green-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
+            <textarea
+              placeholder="Your Message"
+              rows="4"
+              className="w-full p-3 border border-gray-600 bg-black text-green-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            ></textarea>
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-500 text-black font-bold"
+            >
+              Send Message
+            </Button>
+          </motion.form>
+        </section>
+
+        <footer className="p-6 text-center border-t border-green-500">
+          <p className="text-gray-400">
+            © {new Date().getFullYear()} Vikas Kumar | Built with{" "}
+            <span className="text-red-500">❤</span> for Cybersecurity
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+}
